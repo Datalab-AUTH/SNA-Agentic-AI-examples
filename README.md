@@ -1,18 +1,18 @@
-SNA-Agentic-AI-Examples
+# SNA-Agentic-AI-Examples
 
 A repository demonstrating examples of Agentic AI using the Google Agent Developer Kit (ADK).
 
-Getting Started
+## Getting Started
 
 Follow these steps to set up your environment and run the Agentic AI examples.
 
-Prerequisites
+### Prerequisites
 
     Python 3.11 installed on your system.
 
     A Google API Key for access to the Gemini API.
 
-API Key Setup
+### API Key Setup
 
     Obtain a Key: Get a free Google API Key from the Google AI Studio: https://aistudio.google.com.
 
@@ -25,14 +25,14 @@ API Key Setup
 
         Note: The .env file is typically included in the .gitignore to prevent accidentally sharing your secret key.
 
-Environment Setup
+### Environment Setup
 
     Install Dependencies: Open your terminal in the root directory and install the required packages:
     Bash
 
     pip install -r requirements.txt
 
-Running the Examples
+## Running the Examples
 
 This repository includes two main methods for running the agents: the ADK Web UI and a Command-Line Runner.
 
