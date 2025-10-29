@@ -1,0 +1,34 @@
+{
+	"program": "DWS",
+	"description": "Courses for the Data Science/ Web Science (DWS) program",
+	"semesters": [
+		{
+			"number": 1,
+			"name": "1st semester",
+			"courses": [
+				{ "code": "DWS101", "title": "Machine Learning", "ects": 7.5, "type": "ELC" },
+				{ "code": "DWS102", "title": "Technologies for Big Data Analytics", "ects": 7.5, "type": "ELC" },
+				{ "code": "DWS103", "title": "Semantic Web", "ects": 7.5, "type": "ELC" },
+				{ "code": "DWS104", "title": "Natural Language Processing", "ects": 7.5, "type": "ELC" },
+				{ "code": "DWS105", "title": "Social Network Analysis", "ects": 7.5, "type": "ELC" },
+				{ "code": "DWS106", "title": "Statistical Data Analysis", "ects": 7.5, "type": "ELC" },
+				{ "code": "DWS107", "title": "Algorithmic Game Theory", "ects": 7.5, "type": "ELC" }
+			]
+		},
+		{
+			"number": 2,
+			"name": "2nd semester",
+			"courses": [
+				{ "code": "DWS201", "title": "Web Mining", "ects": 7.5, "type": "ELC" },
+				{ "code": "DWS202", "title": "Distributed Data Processing", "ects": 7.5, "type": "ELC" },
+				{ "code": "DWS203", "title": "Mining from Massive Datasets", "ects": 7.5, "type": "ELC" },
+				{ "code": "DWS204", "title": "Decentralized Technologies", "ects": 7.5, "type": "ELC" },
+				{ "code": "DWS205", "title": "Advanced Topics in Machine Learning", "ects": 7.5, "type": "ELC" },
+				{ "code": "DWS206", "title": "Advanced Topics in Databases", "ects": 7.5, "type": "ELC" },
+				{ "code": "DWS207", "title": "Knowledge Graphs and Ontology Engineering", "ects": 7.5, "type": "ELC" },
+				{ "code": "NCO-02-05", "title": "THEORY OF COMPUTATION", "ects": 6, "type": "Erasm" }
+			]
+		}
+	]
+}
+
