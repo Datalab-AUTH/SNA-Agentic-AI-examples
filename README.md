@@ -10,7 +10,7 @@ Follow these steps to set up your environment and run the Agentic AI examples.
 
     Python 3.11 installed on your system.
 
-    A Google API Key for access to the Gemini API.
+    A Google API Key for access to the Gemini API (this is not needed you use Datalab LLM)
 
 ### API Key Setup
 
@@ -22,8 +22,6 @@ Follow these steps to set up your environment and run the Agentic AI examples.
     Bash
 
     GOOGLE_API_KEY="YOUR_API_KEY_HERE"
-
-        Note: The .env file is typically included in the .gitignore to prevent accidentally sharing your secret key.
 
 #### Using Alternative LLMs (Datalab)
 
@@ -68,16 +66,3 @@ The fifth example demonstrates how to run an agent directly from the command lin
     python 05_sdk_agents_operations/agent_runner.py
 
     The agent will execute its defined workflow and output the results directly in the terminal.
-
-Example 6: Using Alternative LLMs
-
-The sixth example demonstrates how to use alternative LLM providers (like Ollama or custom OpenAI-compatible APIs) instead of Google's Gemini.
-
-    Prerequisites: Make sure you have added the required API credentials to your .env file (see "Using Alternative LLMs (Datalab)" section above).
-
-    Run with ADK Web UI: Start the ADK web server and select Example 6:
-    Bash
-
-    adk web
-
-    The agent uses the LiteLlm model wrapper to connect to alternative LLM providers, allowing you to use models like Llama 3.1 hosted on custom servers.
