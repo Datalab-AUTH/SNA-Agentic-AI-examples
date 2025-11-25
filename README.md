@@ -25,6 +25,15 @@ Follow these steps to set up your environment and run the Agentic AI examples.
 
         Note: The .env file is typically included in the .gitignore to prevent accidentally sharing your secret key.
 
+#### Using Alternative LLMs (Datalab)
+
+if you want to use alternative LLMs from the Datalab server at Aristotle University, add these additional variables to your .env file:
+
+```bash
+OPENAI_API_KEY="sk-5f2d89665d45439eb3d460f38b996abf"
+OPENAI_API_BASE="https://babili.csd.auth.gr/api"
+```
+
 ### Environment Setup
 
     Install Dependencies: Open your terminal in the root directory and install the required packages:
@@ -56,6 +65,19 @@ The fifth example demonstrates how to run an agent directly from the command lin
     Run the Agent: Execute the Python script from your terminal:
     Bash
 
-    python agent_runner.py
+    python 05_sdk_agents_operations/agent_runner.py
 
     The agent will execute its defined workflow and output the results directly in the terminal.
+
+Example 6: Using Alternative LLMs
+
+The sixth example demonstrates how to use alternative LLM providers (like Ollama or custom OpenAI-compatible APIs) instead of Google's Gemini.
+
+    Prerequisites: Make sure you have added the required API credentials to your .env file (see "Using Alternative LLMs (Datalab)" section above).
+
+    Run with ADK Web UI: Start the ADK web server and select Example 6:
+    Bash
+
+    adk web
+
+    The agent uses the LiteLlm model wrapper to connect to alternative LLM providers, allowing you to use models like Llama 3.1 hosted on custom servers.
