@@ -30,7 +30,7 @@ if you want to use alternative LLMs from the Datalab server at Aristotle Univers
 **Note:** You must be connected to the AUTH VPN to access the Datalab's LLM.
 
 ```bash
-OLLAMA_API_BASE="http://babili.csd.auth.gr:11434"
+OLLAMA_API_BASE="https://babili.csd.auth.gr:11435"
 ```
 
 ### Environment Setup
