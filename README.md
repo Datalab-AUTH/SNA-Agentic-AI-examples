@@ -27,6 +27,8 @@ Follow these steps to set up your environment and run the Agentic AI examples.
 
 if you want to use alternative LLMs from the Datalab server at Aristotle University, add these additional variables to your .env file:
 
+**Note:** You must be connected to the AUTH VPN to access the Datalab's LLM.
+
 ```bash
 OLLAMA_API_BASE="http://babili.csd.auth.gr:11434"
 ```
