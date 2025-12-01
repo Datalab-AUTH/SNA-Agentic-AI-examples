@@ -28,8 +28,7 @@ Follow these steps to set up your environment and run the Agentic AI examples.
 if you want to use alternative LLMs from the Datalab server at Aristotle University, add these additional variables to your .env file:
 
 ```bash
-OPENAI_API_KEY="sk-5f2d89665d45439eb3d460f38b996abf"
-OPENAI_API_BASE="https://babili.csd.auth.gr/api"
+OLLAMA_API_BASE="http://babili.csd.auth.gr:11434"
 ```
 
 ### Environment Setup
