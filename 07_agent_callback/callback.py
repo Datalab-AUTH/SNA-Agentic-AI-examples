@@ -1,12 +1,14 @@
 import os
 from google.adk.agents.callback_context import CallbackContext
+import datetime
 
 
 async def save_session_callback(callback_context: CallbackContext):
     session = callback_context.session
     output_dir = "saved_sessions"
     os.makedirs(output_dir, exist_ok=True)
-    file_path = os.path.join(output_dir, f"session_{session.id}.json")
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    file_path = os.path.join(output_dir, f"session_{timestamp}_{session.id}.json")
 
     session_json = session.model_dump_json(exclude_none=True, indent=2)
 
