@@ -1,2 +1,7 @@
 __pycache__
 *.pyc
+.venv/
+.pytest_cache/
+.env
+presentations/
+saved_sessions/

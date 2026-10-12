@@ -1,134 +1,113 @@
-# SNA-Agentic-AI-Examples
+# SNA Agentic AI Examples
 
-A repository demonstrating examples of Agentic AI using the Google Agent Developer Kit (ADK).
+Examples for building AI agents with [Pydantic AI](https://pydantic.dev/docs/ai/overview/), using the course LLMs through [Open WebUI](https://filos.csd.auth.gr/).
 
-## Getting Started
+## Setup
 
-Follow these steps to set up your environment and run the Agentic AI examples.
-
-### Prerequisites
-
-    Python 3.11 installed on your system.
-
-    A Google API Key for access to the Gemini API (this is not needed you use Datalab LLM)
-
-### API Key Setup
-
-    Obtain a Key: Get a free Google API Key from the Google AI Studio: https://aistudio.google.com.
-
-    Create .env file: In the root directory of this repository, create a file named .env.
-
-    Add Key: Inside the .env file, add your API key with the following format:
-    Bash
-
-    GOOGLE_API_KEY="YOUR_API_KEY_HERE"
-
-#### Using Alternative LLMs (Datalab)
-
-if you want to use alternative LLMs from the Datalab server at Aristotle University, add these additional variables to your .env file:
-
-**Note:** You must be connected to the AUTH VPN to access the Datalab's LLM.
+You need Python 3.11 or newer.
 
 ```bash
-OLLAMA_API_BASE="https://babili.csd.auth.gr:11435"
+python -m venv .venv
+.venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-### Environment Setup
+1. Get an API key: log in to <https://filos.csd.auth.gr/>, then go to **profile icon → Settings → Account → API keys → Create new secret key**.
+2. Copy `.env.example` to `.env` and paste your key into it. Never commit `.env`.
+3. Check the connection:
 
-    Install Dependencies: Open your terminal in the root directory and install the required packages:
-    Bash
-
-    pip install -r requirements.txt
-
-## Running the Examples
-
-This repository includes multiple methods for running the agents: the ADK Web UI, Command-Line Runners, and Docker-based persistent sessions.
-
-### Examples 1-4: Using the ADK Web UI
-
-The Google ADK provides a local web interface for easily testing and interacting with your agents.
-
-1. **Start the Local Server**: From the root directory, run the following command:
-   ```bash
-   adk web
-   ```
-
-2. **Access the UI**: A local server will start, typically accessible at: http://localhost:8000
-
-3. **Select Examples**: You can select and run the first four examples directly from the ADK Web UI environment.
-
-#### Example Details:
-- **01_hello_world_agent**: Basic agent setup and interaction
-- **02_tool_calling_agent**: Agent with tool integration
-- **03_agent_as_tool_calling_agent**: Hierarchical agent structure where one agent uses another as a tool
-- **04_output_schema_tool_calling_agent**: Agent with structured output schemas
-
-### Example 5: Command-Line Agent Runner (In-Memory Sessions)
-
-The fifth example demonstrates how to run an agent directly from the command line with in-memory session management.
-
-**Run the Agent**: Execute the Python script from your terminal:
 ```bash
-python 05_sdk_agents_operations/agent_runner.py
+python 00_check_connection/check_connection.py
 ```
 
-The agent will execute its defined workflow and output the results directly in the terminal using in-memory session storage.
+Run all examples from the repository root.
 
-### Example 6: Command-Line Agent Runner with Database Sessions
+## Connecting Pydantic AI to Open WebUI
 
-This example demonstrates persistent session management using PostgreSQL for storing conversation history.
+Open WebUI offers an OpenAI-compatible API under `/api`, so we use Pydantic AI's OpenAI chat model. Every example starts like this:
 
-#### Setup PostgreSQL with Docker
+```python
+from pydantic_ai import Agent
+from pydantic_ai.models.openai import OpenAIChatModel
+from pydantic_ai.providers.openai import OpenAIProvider
 
-1. **Build the Docker image**:
-   ```bash
-   docker build -t postgres-agent -f 06_sdk_agents_operations/Dockerfile 06_sdk_agents_operations/
-   ```
+model = OpenAIChatModel(
+    os.environ["OPENWEBUI_MODEL"],                    # e.g. datalab-2:latest
+    provider=OpenAIProvider(
+        base_url=os.environ["OPENWEBUI_BASE_URL"],    # https://filos.csd.auth.gr/api
+        api_key=os.environ["OPENWEBUI_API_KEY"],
+    ),
+)
 
-2. **Run the PostgreSQL container**:
-   ```bash
-   docker run -d -p 5432:5432 --name postgres-agent postgres-agent
-   ```
+agent = Agent(model, instructions="You are a helpful assistant.")
+result = agent.run_sync("Hello!")
+print(result.output)
+```
 
-   This creates a PostgreSQL database with:
-   - Username: `agent_user`
-   - Password: `agent_password`
-   - Database: `agent_sessions`
-   - Port: `5432`
+## Examples
 
-3. **Run the Agent**:
-   ```bash
-   python 06_sdk_agents_operations/agent_runner.py
-   ```
+Each file starts with a short explanation. Read the code from top to bottom.
 
-**Key Features**:
-- Persistent session storage in PostgreSQL
-- Conversation history maintained across runs
-- Session management with user and application context
-- Same user can continue conversations by reusing session IDs
+| Example | Run | What it shows |
+|---|---|---|
+| 01 Hello world | `python 01_hello_world_agent/agent.py` | Model, agent, instructions, `run_sync()` |
+| 02 Tools | `python 02_tool_calling_agent/agent.py` | Python functions that the LLM can call |
+| 03 Dependencies | `python 03_dependencies_agent/agent.py` | `deps`, `RunContext`, dynamic instructions, `ModelRetry` |
+| 04 Structured output | `python 04_structured_output_agent/agent.py` | Pydantic models as answers, output validators |
+| | `python 04_structured_output_agent/output_modes.py` | Tool, native and prompted output modes |
+| 05 Multi-agent | `python 05_multi_agent/agent_as_tool.py` | An agent called from another agent's tool |
+| | `python 05_multi_agent/pipeline.py` | A pipeline of agents |
+| 06 Conversations | `python 06_conversations/chat.py` | Chat history, async, streaming |
+| | `python 06_conversations/web_ui.py` | A browser chat UI at <http://127.0.0.1:7932> |
+| 07 Persistent sessions | `python 07_persistent_sessions/chat.py --user maria` | Conversations stored in PostgreSQL |
+| 08 Hooks | `python 08_hooks/agent.py` | Your own code before and after model requests, tool calls and runs |
+| 09 Testing | `pytest 09_testing -v` | Agent tests without an LLM (`TestModel`, `FunctionModel`) |
 
-**Managing the Docker Container**:
-- Stop container: `docker stop postgres-agent`
-- Start container: `docker start postgres-agent`
-- Remove container: `docker rm postgres-agent`
-- View logs: `docker logs postgres-agent`
+### Example 07: start PostgreSQL first
 
-### Example 7: Agent with Callbacks
-
-This example demonstrates using callbacks to save session data after each agent interaction, running through the ADK Web UI.
-
-**Run with ADK Web UI**:
 ```bash
-adk web
+docker build -t postgres-agent -f 07_persistent_sessions/Dockerfile 07_persistent_sessions/
+docker run -d -p 5432:5432 --name postgres-agent postgres-agent
 ```
 
-Then select example `07_agent_callback` from the UI.
+Use `--list` to see your sessions and `--session <id>` to continue one.
 
-**Key Features**:
-- Implements `after_agent_callback` to execute custom logic after each agent turn
-- Automatically saves complete session history to JSON files
-- Sessions saved to `saved_sessions/` directory
-- Each session file named as `session_{session_id}.json`
-- Useful for debugging, logging, and conversation analysis
+## Cheat sheet
 
-**Note**: The `saved_sessions/` directory will be created automatically if it doesn't exist.
+```python
+agent = Agent(
+    model,
+    instructions="...",       # the system prompt
+    tools=[my_function],      # functions the LLM may call
+    deps_type=MyDeps,         # type of the data passed in at run time
+    output_type=MyModel,      # structured answer (default: str)
+    capabilities=[hooks],     # hooks and other add-ons
+)
+
+@agent.tool_plain             # a tool that needs no context
+def add(a: int, b: int) -> int: ...
+
+@agent.tool                   # a tool that reads ctx.deps
+def whoami(ctx: RunContext[MyDeps]) -> str: ...
+
+result = agent.run_sync("question", deps=my_deps)
+result.output                 # the answer
+result.all_messages()         # every message, including tool calls
+result.conversation           # pass it as conversation=... to continue the chat
+```
+
+## Models
+
+The default is `datalab-2:latest`. `datalab-1` and `datalab-3` also work with every example. The small Llama models (`datalab-4`, `datalab-5`) are faster, but they fail at structured output (examples 04 and 05). To see all models, run `00_check_connection/check_connection.py`.
+
+## Troubleshooting
+
+- **401 Unauthorized:** create a new API key and update `.env`. API keys must be enabled by the Open WebUI admin (*Settings → Admin → Authentication → API Keys*).
+- **Cannot connect:** check `OPENWEBUI_BASE_URL` (it must end with `/api`), or connect to the AUTH VPN.
+- **The first answer is slow:** the server is loading the model. Later answers are faster.
+- **`UnicodeEncodeError` on Windows:** run `$env:PYTHONUTF8=1` in PowerShell before running Python.
+
+## Learn more
+
+- [Pydantic AI docs](https://pydantic.dev/docs/ai/overview/)
+- [Open WebUI API](https://docs.openwebui.com/reference/api-endpoints)

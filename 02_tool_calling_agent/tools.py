@@ -1,43 +1,46 @@
-from pathlib import Path
-from typing import List, Dict, Any, Optional
+"""
+Ordinary Python functions that we hand to the agent as TOOLS.
+
+Pydantic AI reads each function's NAME, TYPE HINTS and DOCSTRING and turns them
+into a description the LLM can understand. So: good names, precise type hints
+and clear docstrings are not optional here - they are the tool's "user manual".
+"""
+
 import json
+from pathlib import Path
+
+COURSES_FILE = Path(__file__).resolve().parent.parent / "data" / "courses.json"
 
 
+def load_courses() -> list[dict]:
+    """Read data/courses.json and return one flat list of courses."""
+    program = json.loads(COURSES_FILE.read_text(encoding="utf-8"))
+    return [
+        {**course, "semester": semester["number"]}
+        for semester in program["semesters"]
+        for course in semester["courses"]
+    ]
 
-def fetch_courses() -> List[Dict[str, Any]]:
-	"""
-	Load courses from the local `courses.json` and return a flat list of course dictionaries.
-	Each returned dict contains the original course fields plus the semester information under
-	`semester_number` and `semester_name`.
 
-	Returns
-	-------
-	List[Dict[str, Any]]
-		A list of course dictionaries. Each dictionary will include the keys:
-		- code (str)
-		- title (str)
-		- ects (number)
-		- type (str)
-		- semester_number (int)
-		- semester_name (str)
-	"""
+def list_courses(semester: int | None = None) -> list[dict]:
+    """List the courses of the Data and Web Science (DWS) master program.
 
-	path = Path(__file__).resolve().parent / "courses.json"
-	if not path.exists():
-		raise FileNotFoundError(f"courses.json not found at: {path}")
+    Args:
+        semester: Only return the courses of this semester (1 or 2). Leave empty for all courses.
+    """
+    courses = load_courses()
+    if semester is not None:
+        courses = [course for course in courses if course["semester"] == semester]
+    return courses
 
-	with path.open("r", encoding="utf-8") as fh:
-		doc = json.load(fh)
 
-	out: List[Dict[str, Any]] = []
-	for sem in doc.get("semesters", []):
-		sem_num = sem.get("number")
-		sem_name = sem.get("name")
-		for c in sem.get("courses", []):
-			course = dict(c)
-			course["semester_number"] = sem_num
-			course["semester_name"] = sem_name
-			out.append(course)
+def get_course(code: str) -> dict:
+    """Get one course of the DWS program by its course code.
 
-	return out
-
+    Args:
+        code: The course code, for example 'DWS105'.
+    """
+    for course in load_courses():
+        if course["code"].lower() == code.strip().lower():
+            return course
+    return {"error": f"There is no course with code {code!r}."}
