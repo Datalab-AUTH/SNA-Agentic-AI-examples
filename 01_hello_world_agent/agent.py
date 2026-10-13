@@ -22,10 +22,10 @@ load_dotenv()
 #    Open WebUI offers an OpenAI-compatible "Chat Completions" API, so we use
 #    Pydantic AI's OpenAI model class and point it at our Open WebUI server.
 model = OpenAIChatModel(
-    os.environ["OPENWEBUI_MODEL"],  # e.g. "llama3.1:8b"
+    os.environ["OPENWEBUI_MODEL"],
     provider=OpenAIProvider(
-        base_url=os.environ["OPENWEBUI_BASE_URL"],  # e.g. "http://localhost:3000/api"
-        api_key=os.environ["OPENWEBUI_API_KEY"],  # Open WebUI -> Settings -> Account -> API keys
+        base_url=os.environ["OPENWEBUI_BASE_URL"],
+        api_key=os.environ["OPENWEBUI_API_KEY"],
     ),
 )
 
