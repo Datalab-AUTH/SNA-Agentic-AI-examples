@@ -12,9 +12,9 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-1. Get an API key: log in to <https://filos.csd.auth.gr/>, then go to **profile icon → Settings → Account → API keys → Create new secret key**.
-2. Copy `.env.example` to `.env` and paste your key into it. Never commit `.env`.
-3. Check the connection:
+
+1. Copy `.env.example` to `.env` and paste your key into it. Never commit `.env`.
+2. Check the connection:
 
 ```bash
 python 00_check_connection/check_connection.py
