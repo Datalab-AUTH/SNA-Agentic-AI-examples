@@ -4,10 +4,8 @@ Example 00 - Check your connection to Open WebUI
 
 Run this FIRST. It checks, step by step, that:
   1. your .env file has the three settings we need,
-  2. the Open WebUI server is reachable and accepts your API key,
-  3. the model you picked exists,
-  4. the model can chat, and
-  5. the model can call tools (needed from Example 02 on).
+  2. the Open WebUI server is reachable and accepts your API key, and
+  3. the model you picked exists.
 
 Run from the repository root:
     python 00_check_connection/check_connection.py
@@ -18,9 +16,6 @@ import sys
 
 import openai
 from dotenv import load_dotenv
-from pydantic_ai import Agent, ToolCallPart
-from pydantic_ai.models.openai import OpenAIChatModel
-from pydantic_ai.providers.openai import OpenAIProvider
 
 load_dotenv()
 
@@ -73,45 +68,5 @@ print("\nStep 3: checking your model")
 if model_name not in available:
     fail(f"Model '{model_name}' is not in the list above. Set OPENWEBUI_MODEL to one of them.")
 print(f"  '{model_name}' is available.")
-
-# ---------------------------------------------------------------------------
-# Step 4: a first Pydantic AI agent (Example 01 explains every line of this)
-# ---------------------------------------------------------------------------
-model = OpenAIChatModel(model_name, provider=OpenAIProvider(base_url=base_url, api_key=api_key))
-
-print("\nStep 4: sending a test message (the first request can take a while if the model must load)")
-agent = Agent(model, instructions="Answer in at most one short sentence.")
-result = agent.run_sync("Say hello to the Social Network Analysis students.")
-print(f"  The model says: {result.output}")
-
-# ---------------------------------------------------------------------------
-# Step 5: tool calling
-# ---------------------------------------------------------------------------
-print("\nStep 5: checking that the model can call tools")
-tool_agent = Agent(model, instructions="Use your tools to answer.")
-
-
-@tool_agent.tool_plain
-def get_room_number() -> str:
-    """Return the room where the Social Network Analysis lecture takes place."""
-    return "Room B.42"
-
-
-try:
-    result = tool_agent.run_sync("In which room is the Social Network Analysis lecture?")
-except openai.BadRequestError as error:
-    fail(f"The model rejected the tools ({error}). Pick a model that supports tool calling.")
-
-called_tools = [
-    part.tool_name
-    for message in result.all_messages()
-    for part in message.parts
-    if isinstance(part, ToolCallPart)
-]
-if "get_room_number" in called_tools:
-    print(f"  The model called the tool and answered: {result.output}")
-else:
-    print("  [WARN] The model answered without calling the tool. Tool-calling examples may not work")
-    print("         well with this model; try a bigger one (e.g. llama3.1:8b or qwen3).")
 
 print("\n[OK] Everything works. Continue with Example 01!")
