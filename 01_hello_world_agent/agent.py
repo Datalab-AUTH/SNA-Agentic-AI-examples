@@ -44,7 +44,7 @@ if __name__ == "__main__":
     # 3. RUN the agent. run_sync() sends the prompt and waits for the final answer.
     result = agent.run_sync("Hi! Who are you, and who are you talking to?")
 
-    print(result.output)  # the answer: a str, because we did not ask for structured output
+    print(result.output)  # the answer: a string
     print()
     print(f"Requests to the LLM: {result.usage.requests}")
     print(f"Tokens in / out:     {result.usage.input_tokens} / {result.usage.output_tokens}")
